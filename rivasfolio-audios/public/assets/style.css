@@ -1,0 +1,335 @@
+/* ==========================================================================
+   RivasFolio — Audios personalizados
+   Marrón oscuro + crema, tipografía Helvetica, mobile-first.
+   ========================================================================== */
+
+:root {
+  --brown-950: #1c130c;   /* fondo */
+  --brown-800: #33221541; /* placeholder no usado */
+  --brown-card: #2b1c12;  /* tarjeta */
+  --brown-line: #4a3521;  /* líneas / bordes sutiles */
+  --cream-100: #f6ecda;   /* texto principal */
+  --cream-300: #e3d2b4;   /* texto secundario */
+  --cream-500: #c9b28c;   /* texto terciario / etiquetas */
+  --gold-400: #c99a4a;    /* acento — disco, progreso */
+  --gold-500: #b0813a;    /* acento hover */
+  --shadow-deep: 0 30px 60px -20px rgba(0, 0, 0, 0.6);
+
+  --font-display: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100svh;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at 50% -10%, #2a1c11 0%, var(--brown-950) 55%);
+  color: var(--cream-100);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* Textura sutil de "papel" sobre el fondo, muy discreta */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image:
+    repeating-linear-gradient(0deg, #fff 0px, transparent 1px, transparent 2px, #fff 3px);
+  mix-blend-mode: overlay;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  background: var(--brown-card);
+  border: 1px solid var(--brown-line);
+  border-radius: 20px;
+  padding: 40px 28px 32px;
+  box-shadow: var(--shadow-deep);
+  text-align: center;
+}
+
+.eyebrow {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold-400);
+  margin: 0 0 10px;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(28px, 8vw, 40px);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  margin: 0 0 6px;
+  word-break: break-word;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: var(--cream-500);
+  margin: 0 0 32px;
+  line-height: 1.5;
+}
+
+/* ---------- Disco / botón de play ---------- */
+
+.disc-wrap {
+  position: relative;
+  width: 176px;
+  height: 176px;
+  margin: 0 auto 28px;
+}
+
+.disc {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background:
+    repeating-radial-gradient(
+      circle at center,
+      #241811 0px,
+      #241811 3px,
+      #2c1e13 3px,
+      #2c1e13 6px
+    );
+  border: 1px solid var(--brown-line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s ease;
+  animation: spin 6s linear infinite;
+  animation-play-state: paused;
+}
+
+.disc.is-playing {
+  animation-play-state: running;
+}
+
+.disc-label {
+  width: 60%;
+  height: 60%;
+  border-radius: 50%;
+  background: var(--cream-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+
+.play-btn {
+  appearance: none;
+  border: none;
+  background: var(--brown-950);
+  color: var(--gold-400);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+
+.play-btn:hover {
+  background: #241811;
+}
+
+.play-btn:active {
+  transform: scale(0.94);
+}
+
+.play-btn:focus-visible {
+  outline: 2px solid var(--gold-400);
+  outline-offset: 3px;
+}
+
+.play-btn svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
+.icon-pause {
+  display: none;
+}
+
+.play-btn.is-playing .icon-play {
+  display: none;
+}
+
+.play-btn.is-playing .icon-pause {
+  display: block;
+}
+
+/* ---------- Progreso / tiempo ---------- */
+
+.progress-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.time {
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  color: var(--cream-500);
+  min-width: 34px;
+}
+
+.time.time-end {
+  text-align: right;
+}
+
+.progress-track {
+  position: relative;
+  flex: 1;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.progress-track::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--brown-line);
+}
+
+.progress-fill {
+  position: absolute;
+  left: 0;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--gold-400);
+  width: 0%;
+  pointer-events: none;
+}
+
+.progress-knob {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--cream-100);
+  left: 0%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+.progress-track input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 20px;
+  background: transparent;
+  margin: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.progress-track input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  cursor: pointer;
+}
+
+.progress-track input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.progress-track input[type="range"]::-moz-range-track {
+  background: transparent;
+}
+
+/* ---------- Mensaje opcional ---------- */
+
+.message {
+  margin: 24px 0 0;
+  padding-top: 20px;
+  border-top: 1px solid var(--brown-line);
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--cream-300);
+  text-align: left;
+}
+
+.message[hidden] {
+  display: none;
+}
+
+/* ---------- Pie ---------- */
+
+.footer {
+  margin-top: 28px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cream-500);
+  opacity: 0.7;
+}
+
+/* ---------- Animaciones ---------- */
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .disc {
+    animation: none !important;
+  }
+}
+
+/* Pantallas muy pequeñas */
+@media (max-width: 340px) {
+  .card {
+    padding: 32px 20px 26px;
+  }
+  .disc-wrap {
+    width: 150px;
+    height: 150px;
+  }
+}
